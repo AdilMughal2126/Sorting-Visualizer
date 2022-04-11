@@ -5,8 +5,16 @@ const button1 = document.getElementById("button1");
 const button2 = document.getElementById("button2");
 const button3 = document.getElementById("button3");
 const button4 = document.getElementById("button4");
-
+const button5 = document.getElementById("button5");
+const button6 = document.getElementById("button6");
+const sortingSelect = document.getElementById("sortingSpeed");
+let speed = 300;
 generatebars();
+
+sortingSelect.addEventListener("change", () => {
+  const value = sortingSelect.value;
+  speed = +value;
+});
 
 // eventListener
 button1.addEventListener("click", () => {
@@ -26,12 +34,17 @@ button4.addEventListener("click", () => {
   disableAllButtons();
 });
 
+button5.addEventListener("click", () => {
+  mergeSortHelper();
+  disableAllButtons();
+});
+
 /**
  * Functions
  */
 
 // function to generate bars
-function generatebars(num = 20) {
+function generatebars(num = 30) {
   //for loop to generate 20 bars
   for (let i = 0; i < num; i += 1) {
     // To generate random values from 1 to 100
@@ -42,9 +55,10 @@ function generatebars(num = 20) {
 
     // To add class "bar" to "div"
     bar.classList.add("bar");
+    bar.classList.add("col-s12");
 
     // Provide height to the bar
-    bar.style.height = `${value * 3}px`;
+    bar.style.height = `${value * 3.5}px`;
 
     // Translate the bar towards positive X axis
     bar.style.transform = `translateX(${i * 30}px)`;
@@ -190,12 +204,92 @@ async function InsertionSort() {
   enableAllButtons();
 }
 
+// Merge Sort Implentation (Recursive)
+
+async function mergeSortHelper() {
+  const bars = Array.from(document.querySelectorAll(".bar"));
+  await mergeSort(bars, 0, bars.length - 1);
+}
+
+// Javascript program in-place Merge Sort
+
+// Merges two subarrays of arr[].
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+// Inplace Implementation
+async function merge(arr, start, mid, end) {
+  let start2 = mid + 1;
+
+  // If the direct merge is already sorted
+  if (+arr[mid].innerText <= +arr[start2].innerText) {
+    arr[mid].style.backgroundColor = "green";
+    arr[start2].style.backgroundColor = "green";
+    return;
+  }
+  console.log(start, mid, end);
+  // Two pointers to maintain start
+  // of both arrays to merge
+  while (start <= mid && start2 <= end) {
+    // If element 1 is in right place
+    if (parseInt(arr[start].innerText) <= parseInt(arr[start2].innerText)) {
+      arr[start].style.backgroundColor = "green";
+      start++;
+    } else {
+      let value = arr[start2];
+      let valheight = arr[start2].style.height;
+      let tempval = arr[start2].innerText;
+      let index = start2;
+
+      // Shift all the elements between element 1
+      // element 2, right by 1.
+      while (index != start) {
+        arr[index].innerText = arr[index - 1].innerText;
+        arr[index].style.height = arr[index - 1].style.height;
+        await pause();
+        index--;
+      }
+      arr[start].innerText = tempval;
+      arr[start].style.height = valheight;
+      arr[start].style.height = "green";
+      console.log(arr);
+      await pause();
+
+      // Update all the pointers
+      start++;
+      mid++;
+      start2++;
+    }
+  }
+}
+
+/* l is for left index and r is right index
+of the sub-array of arr to be sorted */
+async function mergeSort(arr, l, r) {
+  if (l < r) {
+    // Same as (l + r) / 2, but avoids overflow
+    // for large l and r
+    let m = l + Math.floor((r - l) / 2);
+
+    arr[m].style.backgroundColor = "darkblue";
+    await pause();
+
+    arr[m].style.backgroundColor = "rgb(0, 183, 255)";
+    await pause();
+
+    // Sort first and second halves
+    await mergeSort(arr, l, m);
+    await mergeSort(arr, m + 1, r);
+
+    await merge(arr, l, m, r);
+  }
+}
+
 // function to pause the code execution
 async function pause() {
   await new Promise(resolve =>
     setTimeout(() => {
       resolve();
-    }, 100),
+    }, speed),
   );
 }
 
@@ -245,3 +339,12 @@ function enableAllButtons() {
   button4.disabled = false;
   button4.style.backgroundColor = "#6f459e";
 }
+
+// Materilize css funcntions
+$(document).ready(function () {
+  $(".dropdown-trigger").dropdown();
+});
+
+$(document).ready(function () {
+  $("select").formSelect();
+});
