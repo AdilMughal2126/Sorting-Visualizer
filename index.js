@@ -11,12 +11,12 @@ const sortingSelect = document.getElementById("sortingSpeed");
 let speed = 300;
 generatebars();
 
+// eventListener
 sortingSelect.addEventListener("change", () => {
   const value = sortingSelect.value;
   speed = +value;
 });
 
-// eventListener
 button1.addEventListener("click", () => {
   window.location.reload();
 });
@@ -81,7 +81,7 @@ function generatebars(num = 30) {
 }
 
 // asynchronous function to perform "Selection Sort"
-async function SelectionSort(delay = 300) {
+async function SelectionSort() {
   let bars = document.querySelectorAll(".bar");
   // Assign 0 to min_idx
   var min_idx = 0;
@@ -209,6 +209,7 @@ async function InsertionSort() {
 async function mergeSortHelper() {
   const bars = Array.from(document.querySelectorAll(".bar"));
   await mergeSort(bars, 0, bars.length - 1);
+  enableAllButtons();
 }
 
 // Javascript program in-place Merge Sort
@@ -226,7 +227,6 @@ async function merge(arr, start, mid, end) {
     arr[start2].style.backgroundColor = "green";
     return;
   }
-  console.log(start, mid, end);
   // Two pointers to maintain start
   // of both arrays to merge
   while (start <= mid && start2 <= end) {
@@ -251,7 +251,6 @@ async function merge(arr, start, mid, end) {
       arr[start].innerText = tempval;
       arr[start].style.height = valheight;
       arr[start].style.height = "green";
-      console.log(arr);
       await pause();
 
       // Update all the pointers
@@ -325,19 +324,19 @@ function disableAllButtons() {
 function enableAllButtons() {
   // To enable the button "Generate New Array" after final(sorted)
   button1.disabled = false;
-  button1.style.backgroundColor = "#6f459e";
+  button1.style.backgroundColor = "#2BBBAD";
 
   // To enable the button "Selection Sort" after final(sorted)
   button2.disabled = false;
-  button2.style.backgroundColor = "#6f459e";
+  button2.style.backgroundColor = "#2BBBAD";
 
   // To enable the button "Selection Sort" after final(sorted)
   button3.disabled = false;
-  button3.style.backgroundColor = "#6f459e";
+  button3.style.backgroundColor = "#2BBBAD";
 
   // To enable the button "Insertion Sort" after final(sorted)
   button4.disabled = false;
-  button4.style.backgroundColor = "#6f459e";
+  button4.style.backgroundColor = "#2BBBAD";
 }
 
 // Materilize css funcntions
